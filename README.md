@@ -28,3 +28,4 @@ sudo mv timr /usr/local/bin/
 *   `timr stop` or `timr pause`: Stops or pauses the timer. The elapsed time will be saved.
 *   `timr status`: Shows the current status of the timer (running or stopped) and the total elapsed time.
 *   `timr reset`: Resets the timer. This will set the elapsed time to zero.
+*   `timr live`: Shows a live, full-screen timer with keyboard controls (q: quit, s: start/stop, r: reset).

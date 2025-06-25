@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"codeberg.org/snonux/timr/internal/version"
+	"codeberg.org/snonux/timr/internal"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 	flag.Parse()
 
 	if *versionFlag {
-		fmt.Println(version.Version)
+		fmt.Println(internal.Version)
 		os.Exit(0)
 	}
 }

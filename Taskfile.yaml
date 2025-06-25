@@ -1,14 +1,15 @@
-version: "3"
+version: '3'
 
 tasks:
   default:
     cmds:
-      - go build ./cmd/timr
-
+      - go build -o timr ./cmd/timr
+  run:
+    cmds:
+      - go run ./cmd/timr
+  test:
+    cmds:
+      - go test ./...
   install:
     cmds:
       - go install ./cmd/timr
-
-  test:
-    cmds:
-      - go test -v ./...

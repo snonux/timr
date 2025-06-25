@@ -1,11 +1,11 @@
 package live
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/common-nighthawk/go-figure"
 	timrTimer "timr/internal/timer"
 )
 
@@ -24,6 +24,8 @@ type Model struct {
 	helpStyle   lipgloss.Style
 	timerStyle  lipgloss.Style
 	statusStyle lipgloss.Style
+	width       int
+	height      int
 }
 
 // NewModel creates a new Model.
@@ -52,6 +54,10 @@ func (m Model) Init() tea.Cmd {
 // Update is called when a message is received.
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
+		return m, nil
 	case tickMsg:
 		if !m.state.Running {
 			return m, nil
@@ -111,10 +117,25 @@ func (m Model) View() string {
 		status = "Running"
 	}
 
-	return fmt.Sprintf(
-		"%s\n%s\n\n%s",
-		m.timerStyle.Render(totalElapsed.String()),
-		m.statusStyle.Render(status),
-		m.helpStyle.Render("q: quit, s: start/stop, r: reset"),
+	// Large timer text
+	figure := figure.NewFigure(totalElapsed.String(), "doom", true)
+	timerStr := m.timerStyle.Render(figure.String())
+
+	statusStr := m.statusStyle.Render(status)
+	helpStr := m.helpStyle.Render("q: quit, s: start/stop, r: reset")
+
+	// Centering
+	return lipgloss.Place(
+		m.width,
+		m.height,
+		lipgloss.Center,
+		lipgloss.Center,
+		lipgloss.JoinVertical(
+			lipgloss.Center,
+			timerStr,
+			statusStr,
+			"", // spacer
+			helpStr,
+		),
 	)
 }

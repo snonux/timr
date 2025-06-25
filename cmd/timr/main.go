@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/charmbracelet/bubbletea"
+	"timr/internal/live"
 	"timr/internal/timer"
 )
 
@@ -25,6 +27,13 @@ func main() {
 		output, err = timer.GetStatus()
 	case "reset":
 		output, err = timer.ResetTimer()
+	case "live":
+		p := tea.NewProgram(live.NewModel())
+		if err := p.Start(); err != nil {
+			fmt.Println("Error running program:", err)
+			os.Exit(1)
+		}
+		return
 	default:
 		printUsage()
 		os.Exit(1)
@@ -38,5 +47,5 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println("Usage: timr <start|stop|pause|status|reset>")
+	fmt.Println("Usage: timr <start|stop|pause|status|reset|live>")
 }

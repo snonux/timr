@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - go build ./cmd/timr
+
+  install:
+    cmds:
+      - go install ./cmd/timr
+
+  test:
+    cmds:
+      - go test -v ./...

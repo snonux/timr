@@ -29,3 +29,24 @@ sudo mv timr /usr/local/bin/
 *   `timr status`: Shows the current status of the timer (running or stopped) and the total elapsed time.
 *   `timr reset`: Resets the timer. This will set the elapsed time to zero.
 *   `timr live`: Shows a live, full-screen timer with keyboard controls (q: quit, s: start/stop, r: reset).
+
+## Fish Shell Integration
+
+`timr` can be integrated with the fish shell to display the current timer status in your prompt.
+
+### Installation
+
+1.  Copy the `integrations/fish-shell` directory to your fish plugins directory:
+
+    ```bash
+    cp -r integrations/fish-shell ~/.config/fish/plugins/timr
+    ```
+
+2.  Update your `fish_prompt` or `fish_right_prompt` function to include the `timr_prompt` function. For example, you can add the following to your `~/.config/fish/functions/fish_prompt.fish` file:
+
+    ```fish
+    function fish_prompt
+        # ... your existing prompt ...
+        printf ' %s' (timr_prompt)
+    end
+    ```

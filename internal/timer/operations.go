@@ -73,3 +73,26 @@ func ResetTimer() (string, error) {
 	}
 	return "Timer reset.", nil
 }
+
+func GetPromptStatus() (string, error) {
+	state, err := LoadState()
+	if err != nil {
+		return "", fmt.Errorf("error loading state: %w", err)
+	}
+
+	elapsed := state.ElapsedTime
+	if state.Running {
+		elapsed += time.Since(state.StartTime)
+	}
+
+	if elapsed == 0 {
+		return "", nil
+	}
+
+	icon := "⏸"
+	if state.Running {
+		icon = "▶"
+	}
+
+	return fmt.Sprintf("%s %s", icon, elapsed.Round(time.Second)), nil
+}

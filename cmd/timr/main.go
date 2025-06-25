@@ -27,6 +27,8 @@ func main() {
 		output, err = timer.GetStatus()
 	case "reset":
 		output, err = timer.ResetTimer()
+	case "prompt":
+		output, err = timer.GetPromptStatus()
 	case "live":
 		p := tea.NewProgram(live.NewModel())
 		if err := p.Start(); err != nil {
@@ -47,5 +49,5 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println("Usage: timr <start|stop|pause|status|reset|live>")
+	fmt.Println("Usage: timr <start|stop|pause|status|reset|live|prompt>")
 }

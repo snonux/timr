@@ -94,5 +94,5 @@ func GetPromptStatus() (string, error) {
 		icon = "▶"
 	}
 
-	return fmt.Sprintf("%s %s", icon, elapsed.Round(time.Second)), nil
+	return fmt.Sprintf("%s%s", icon, elapsed.Round(time.Second)), nil
 }

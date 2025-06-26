@@ -24,7 +24,19 @@ func main() {
 	case "stop", "pause":
 		output, err = timer.StopTimer()
 	case "status":
-		output, err = timer.GetStatus()
+		if len(os.Args) > 2 {
+			switch os.Args[2] {
+			case "raw":
+				output, err = timer.GetRawStatus()
+			case "rawm":
+				output, err = timer.GetRawMinutesStatus()
+			default:
+				printUsage()
+				os.Exit(1)
+			}
+		} else {
+			output, err = timer.GetStatus()
+		}
 	case "reset":
 		output, err = timer.ResetTimer()
 	case "prompt":

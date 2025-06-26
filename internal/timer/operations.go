@@ -74,6 +74,34 @@ func ResetTimer() (string, error) {
 	return "Timer reset.", nil
 }
 
+func GetRawStatus() (string, error) {
+	state, err := LoadState()
+	if err != nil {
+		return "", fmt.Errorf("error loading state: %w", err)
+	}
+
+	elapsed := state.ElapsedTime
+	if state.Running {
+		elapsed += time.Since(state.StartTime)
+	}
+
+	return fmt.Sprintf("%d", int(elapsed.Seconds())), nil
+}
+
+func GetRawMinutesStatus() (string, error) {
+	state, err := LoadState()
+	if err != nil {
+		return "", fmt.Errorf("error loading state: %w", err)
+	}
+
+	elapsed := state.ElapsedTime
+	if state.Running {
+		elapsed += time.Since(state.StartTime)
+	}
+
+	return fmt.Sprintf("%d", int(elapsed.Minutes())), nil
+}
+
 func GetPromptStatus() (string, error) {
 	state, err := LoadState()
 	if err != nil {

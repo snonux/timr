@@ -108,6 +108,76 @@ func TestGetStatus(t *testing.T) {
 	}
 }
 
+func TestGetRawStatus(t *testing.T) {
+	setup(t)
+
+	// Raw status when stopped
+	msg, err := GetRawStatus()
+	if err != nil {
+		t.Fatalf("GetRawStatus() error = %v", err)
+	}
+	want := "0"
+	if msg != want {
+		t.Errorf("GetRawStatus() msg = %q, want %q", msg, want)
+	}
+
+	// Raw status when running
+	state, err := LoadState()
+	if err != nil {
+		t.Fatalf("LoadState() error = %v", err)
+	}
+	state.Running = true
+	state.StartTime = time.Now().Add(-2 * time.Second) // Set start time 2 seconds ago
+	state.ElapsedTime = 0                               // Reset elapsed time for this specific test
+	if err := state.Save(); err != nil {
+		t.Fatalf("Save() error = %v", err)
+	}
+
+	msg, err = GetRawStatus()
+	if err != nil {
+		t.Fatalf("GetRawStatus() error = %v", err)
+	}
+	want = "2"
+	if msg != want {
+		t.Errorf("GetRawStatus() msg = %q, want %q", msg, want)
+	}
+}
+
+func TestGetRawMinutesStatus(t *testing.T) {
+	setup(t)
+
+	// Raw minutes status when stopped
+	msg, err := GetRawMinutesStatus()
+	if err != nil {
+		t.Fatalf("GetRawMinutesStatus() error = %v", err)
+	}
+	want := "0"
+	if msg != want {
+		t.Errorf("GetRawMinutesStatus() msg = %q, want %q", msg, want)
+	}
+
+	// Raw minutes status when running (simulating 2 minutes)
+	state, err := LoadState()
+	if err != nil {
+		t.Fatalf("LoadState() error = %v", err)
+	}
+	state.Running = true
+	state.StartTime = time.Now().Add(-2 * time.Minute) // Set start time 2 minutes ago
+	state.ElapsedTime = 0                               // Reset elapsed time for this specific test
+	if err := state.Save(); err != nil {
+		t.Fatalf("Save() error = %v", err)
+	}
+
+	msg, err = GetRawMinutesStatus()
+	if err != nil {
+		t.Fatalf("GetRawMinutesStatus() error = %v", err)
+	}
+	want = "2"
+	if msg != want {
+		t.Errorf("GetRawMinutesStatus() msg = %q, want %q", msg, want)
+	}
+}
+
 func TestResetTimer(t *testing.T) {
 	setup(t)
 

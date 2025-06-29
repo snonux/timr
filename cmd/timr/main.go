@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/charmbracelet/bubbletea"
 	"timr/internal/live"
@@ -41,6 +42,15 @@ func main() {
 		output, err = timer.ResetTimer()
 	case "prompt":
 		output, err = timer.GetPromptStatus()
+	case "track":
+		if len(os.Args) < 3 {
+			fmt.Println("Error: track command requires a description")
+			printUsage()
+			os.Exit(1)
+		}
+		// Join all arguments after "track" as the description
+		description := strings.Join(os.Args[2:], " ")
+		output, err = timer.TrackTime(description)
 	case "live":
 		p := tea.NewProgram(live.NewModel())
 		if err := p.Start(); err != nil {
@@ -61,5 +71,5 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println("Usage: timr <start|stop|pause|status|reset|live|prompt>")
+	fmt.Println("Usage: timr <start|stop|pause|status|reset|live|prompt|track <description>>")
 }

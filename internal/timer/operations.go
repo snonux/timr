@@ -3,6 +3,7 @@ package timer
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"time"
 )
 
@@ -123,4 +124,48 @@ func GetPromptStatus() (string, error) {
 	}
 
 	return fmt.Sprintf("%s%s", icon, elapsed.Round(time.Second)), nil
+}
+
+func TrackTime(description string) (string, error) {
+	// Load current state
+	state, err := LoadState()
+	if err != nil {
+		return "", fmt.Errorf("error loading state: %w", err)
+	}
+
+	// Calculate total elapsed time
+	elapsed := state.ElapsedTime
+	if state.Running {
+		elapsed += time.Since(state.StartTime)
+	}
+
+	// Convert to minutes
+	minutes := int(elapsed.Minutes())
+	
+	// If timer was running, stop it
+	if state.Running {
+		state.Running = false
+		state.ElapsedTime = elapsed
+		if err := state.Save(); err != nil {
+			return "", fmt.Errorf("error saving state after stopping: %w", err)
+		}
+	}
+
+	// Build and execute the task command
+	taskDescription := fmt.Sprintf("%dmin %s", minutes, description)
+	cmd := exec.Command("task", "add", "+track", taskDescription)
+	
+	// Execute the command and capture output
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		// Command failed, return error with output
+		return "", fmt.Errorf("task command failed: %s\nOutput: %s", err, string(output))
+	}
+
+	// Command succeeded, reset the timer
+	if _, err := ResetTimer(); err != nil {
+		return "", fmt.Errorf("tracked time successfully but failed to reset timer: %w", err)
+	}
+
+	return fmt.Sprintf("Tracked %d minutes: %s\nTimer reset.", minutes, description), nil
 }

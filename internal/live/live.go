@@ -6,7 +6,7 @@ import (
 	"github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/common-nighthawk/go-figure"
-	timrTimer "timr/internal/timer"
+	timrTimer "codeberg.org/snonux/timr/internal/timer"
 )
 
 type tickMsg time.Time

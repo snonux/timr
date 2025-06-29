@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/bubbletea"
-	"timr/internal/live"
-	"timr/internal/timer"
+	"codeberg.org/snonux/timr/internal/live"
+	"codeberg.org/snonux/timr/internal/timer"
 )
 
 func main() {

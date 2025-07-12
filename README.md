@@ -1,6 +1,6 @@
 # timr
 
-A simple command-line tool to track time spent on tasks.
+A simple command-line tool to track time spent on tasks. It has been primarily coded using Google Gemini CLI and Claude Code CLI.
 
 ## About
 

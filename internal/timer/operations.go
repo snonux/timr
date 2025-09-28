@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func StartTimer() (string, error) {
+func StartTimer(continued bool) (string, error) {
 	state, err := LoadState()
 	if err != nil {
 		return "", fmt.Errorf("error loading state: %w", err)
@@ -22,6 +22,11 @@ func StartTimer() (string, error) {
 	if err := state.Save(); err != nil {
 		return "", fmt.Errorf("error saving state: %w", err)
 	}
+
+	if continued {
+		return "Timer continued.", nil
+	}
+
 	return "Timer started.", nil
 }
 
@@ -141,7 +146,7 @@ func TrackTime(description string) (string, error) {
 
 	// Convert to minutes
 	minutes := int(elapsed.Minutes())
-	
+
 	// If timer was running, stop it
 	if state.Running {
 		state.Running = false
@@ -154,7 +159,7 @@ func TrackTime(description string) (string, error) {
 	// Build and execute the task command
 	taskDescription := fmt.Sprintf("%dmin %s", minutes, description)
 	cmd := exec.Command("task", "add", "+track", taskDescription)
-	
+
 	// Execute the command and capture output
 	output, err := cmd.CombinedOutput()
 	if err != nil {

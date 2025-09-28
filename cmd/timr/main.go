@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/charmbracelet/bubbletea"
 	"codeberg.org/snonux/timr/internal/live"
 	"codeberg.org/snonux/timr/internal/timer"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 func main() {
@@ -31,7 +31,15 @@ func runCommand(args []string) (string, error) {
 
 	switch args[1] {
 	case "start":
-		output, err = timer.StartTimer()
+		rawStatus, err := timer.GetRawStatus()
+		if err != nil {
+			return "", err
+		}
+		status, err := strconv.ParseFloat(rawStatus, 64)
+		if err != nil {
+			return "", err
+		}
+		output, err = timer.StartTimer(status > 0)
 	case "continue":
 		rawStatus, err := timer.GetRawStatus()
 		if err != nil {
@@ -42,7 +50,7 @@ func runCommand(args []string) (string, error) {
 			return "", err
 		}
 		if status > 0 {
-			output, err = timer.StartTimer()
+			output, err = timer.StartTimer(true)
 		} else {
 			output = "Timer is at 0, cannot continue."
 		}

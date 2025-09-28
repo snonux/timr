@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/bubbletea"
@@ -11,29 +12,52 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		printUsage()
+	output, err := runCommand(os.Args)
+	if err != nil {
+		fmt.Println("Error:", err)
 		os.Exit(1)
+	}
+	fmt.Println(output)
+}
+
+func runCommand(args []string) (string, error) {
+	if len(args) < 2 {
+		printUsage()
+		return "", fmt.Errorf("no command specified")
 	}
 
 	var err error
 	var output string
 
-	switch os.Args[1] {
+	switch args[1] {
 	case "start":
 		output, err = timer.StartTimer()
+	case "continue":
+		rawStatus, err := timer.GetRawStatus()
+		if err != nil {
+			return "", err
+		}
+		status, err := strconv.ParseFloat(rawStatus, 64)
+		if err != nil {
+			return "", err
+		}
+		if status > 0 {
+			output, err = timer.StartTimer()
+		} else {
+			output = "Timer is at 0, cannot continue."
+		}
 	case "stop", "pause":
 		output, err = timer.StopTimer()
 	case "status":
-		if len(os.Args) > 2 {
-			switch os.Args[2] {
+		if len(args) > 2 {
+			switch args[2] {
 			case "raw":
 				output, err = timer.GetRawStatus()
 			case "rawm":
 				output, err = timer.GetRawMinutesStatus()
 			default:
 				printUsage()
-				os.Exit(1)
+				return "", fmt.Errorf("unknown status command: %s", args[2])
 			}
 		} else {
 			output, err = timer.GetStatus()
@@ -43,33 +67,30 @@ func main() {
 	case "prompt":
 		output, err = timer.GetPromptStatus()
 	case "track":
-		if len(os.Args) < 3 {
-			fmt.Println("Error: track command requires a description")
+		if len(args) < 3 {
 			printUsage()
-			os.Exit(1)
+			return "", fmt.Errorf("track command requires a description")
 		}
 		// Join all arguments after "track" as the description
-		description := strings.Join(os.Args[2:], " ")
+		description := strings.Join(args[2:], " ")
 		output, err = timer.TrackTime(description)
 	case "live":
 		p := tea.NewProgram(live.NewModel())
 		if err := p.Start(); err != nil {
-			fmt.Println("Error running program:", err)
-			os.Exit(1)
+			return "", err
 		}
-		return
+		return "", nil
 	default:
 		printUsage()
-		os.Exit(1)
+		return "", fmt.Errorf("unknown command: %s", args[1])
 	}
 
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		return "", err
 	}
-	fmt.Println(output)
+	return output, nil
 }
 
 func printUsage() {
-	fmt.Println("Usage: timr <start|stop|pause|status|reset|live|prompt|track <description>>")
+	fmt.Println("Usage: timr <start|continue|stop|pause|status|reset|live|prompt|track <description>>")
 }

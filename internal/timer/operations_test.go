@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -12,9 +13,9 @@ import (
 func setup(t *testing.T) {
 	t.Helper()
 	tempDir := t.TempDir()
-	stateFilePathOverride = filepath.Join(tempDir, ".timr_state")
+	StateFilePathOverride = filepath.Join(tempDir, ".timr_state")
 	t.Cleanup(func() {
-		stateFilePathOverride = ""
+		StateFilePathOverride = ""
 	})
 }
 
@@ -118,7 +119,7 @@ func TestGetRawStatus(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetRawStatus() error = %v", err)
 	}
-	want := "0"
+	want := "0.000000"
 	if msg != want {
 		t.Errorf("GetRawStatus() msg = %q, want %q", msg, want)
 	}
@@ -139,9 +140,13 @@ func TestGetRawStatus(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetRawStatus() error = %v", err)
 	}
-	want = "2"
-	if msg != want {
-		t.Errorf("GetRawStatus() msg = %q, want %q", msg, want)
+	// we can't know the exact float, so we check if it's close to 2
+	val, err := strconv.ParseFloat(msg, 64)
+	if err != nil {
+		t.Fatalf("could not parse float: %v", err)
+	}
+	if val < 1.9 || val > 2.1 {
+		t.Errorf("GetRawStatus() msg = %q, want around 2.0", msg)
 	}
 }
 

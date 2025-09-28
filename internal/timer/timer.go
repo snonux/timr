@@ -11,8 +11,12 @@ const (
 	stateFile = ".timr_state"
 )
 
-// stateFilePathOverride is used by tests to override the state file path.
-var stateFilePathOverride string
+// StateFilePathOverride is used by tests to override the state file path.
+var StateFilePathOverride string
+
+func SetStateFilePathOverride(path string) {
+	StateFilePathOverride = path
+}
 
 type State struct {
 	StartTime    time.Time
@@ -21,8 +25,8 @@ type State struct {
 }
 
 func GetStateFile() (string, error) {
-	if stateFilePathOverride != "" {
-		return stateFilePathOverride, nil
+	if StateFilePathOverride != "" {
+		return StateFilePathOverride, nil
 	}
 	configDir, err := os.UserConfigDir()
 	if err != nil {

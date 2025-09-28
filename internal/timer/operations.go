@@ -86,7 +86,7 @@ func GetRawStatus() (string, error) {
 		elapsed += time.Since(state.StartTime)
 	}
 
-	return fmt.Sprintf("%d", int(elapsed.Seconds())), nil
+	return fmt.Sprintf("%f", elapsed.Seconds()), nil
 }
 
 func GetRawMinutesStatus() (string, error) {

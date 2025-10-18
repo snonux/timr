@@ -28,6 +28,7 @@ sudo mv timr /usr/local/bin/
 
 *   `timr start`: Starts the timer. If the timer was previously stopped, it will resume from where it left off.
 *   `timr stop` or `timr pause`: Stops or pauses the timer. The elapsed time will be saved.
+*   `timr cont` or `timr continue`: Continues the stopped timer.
 *   `timr status`: Shows the current status of the timer (running or stopped) and the total elapsed time.
 *   `timr status raw`: Shows the current elapsed time in seconds, in a raw format.
 *   `timr status rawm`: Shows the current elapsed time in minutes, in a raw format.

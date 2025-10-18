@@ -40,6 +40,8 @@ func runCommand(args []string) (string, error) {
 			return "", err
 		}
 		output, err = timer.StartTimer(status > 0)
+	case "cont":
+		fallthrough
 	case "continue":
 		rawStatus, err := timer.GetRawStatus()
 		if err != nil {

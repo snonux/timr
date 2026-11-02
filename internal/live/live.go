@@ -7,8 +7,8 @@ import (
 	"github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/common-nighthawk/go-figure"
-	"codeberg.org/snonux/timr/internal/ascii"
-	timrTimer "codeberg.org/snonux/timr/internal/timer"
+	"github.com/snonux/timr/internal/ascii"
+	timrTimer "github.com/snonux/timr/internal/timer"
 )
 
 type tickMsg time.Time

@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"codeberg.org/snonux/timr/internal/ascii"
-	"codeberg.org/snonux/timr/internal/live"
-	"codeberg.org/snonux/timr/internal/timer"
+	"github.com/snonux/timr/internal/ascii"
+	"github.com/snonux/timr/internal/live"
+	"github.com/snonux/timr/internal/timer"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
